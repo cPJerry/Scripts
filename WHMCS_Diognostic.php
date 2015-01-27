@@ -59,7 +59,6 @@ $english['goodversion'] = "Your PHP version, _1, is compatible.";
 $english['dirnoexists'] = "The following Required directory does not exist: _1.";
 $english['strictmodeon'] = "MySQL Strict mode is on. Please turn it off. (_1)";
 $english['strictmodeoff'] = "MySQL Strict Mode is OFF";
-
 $english['dirnowrite'] = "The following Required directory is not writeable: _1.";
 $english['dirwrite'] = "The following Required directory exists and is writable: _1.";
 $english['badversion'] = "Your PHP version, _1, is not compatible. We require at least _2, but no greater than _3.";
@@ -76,7 +75,7 @@ if (INSTALLED) {
   $english['pass'] = "Your System should be in working order.";
   $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
 }
-$english['goodmem'] = "Your allowed memeory (_1) meets our requirments. (_2)";
+$english['goodmem'] = "Your allowed memory (_1) meets our requirments. (_2)";
 $english['badmem'] = "Your memory limit (currently _1MB) must be at least _2MB.";
 $english['badconfig'] = "The PHP setting _1 is invalid, please turn it _2";
 $english['goodconfig'] = "The PHP setting _1 has a valid value.";
