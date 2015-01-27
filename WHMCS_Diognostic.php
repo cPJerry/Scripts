@@ -10,7 +10,7 @@ require_once('configuration.php');
 }
 ?><html>
 <head>
-<title>WHMCS Post-Install Requirment Check</title>
+<title>WHMCS Diognostic Check</title>
 <style>
 body, td {
     font-family: Tahoma;
@@ -50,7 +50,7 @@ color: inherit;
 
 </div>
 <div style="background-color:#f8f8f8;margin:0;padding:10px 30px;text-align:center;font-weight:bold;font-size:30px;">
-Post-Installation Check
+WHMCS Diognostic Check
 </div>
 
 <div style="padding:25px;">
