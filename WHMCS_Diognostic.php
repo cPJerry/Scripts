@@ -6,7 +6,7 @@ if (INSTALLED ) {
 }
 ?><html>
 <head>
-<title>WHMCS Diognostic Check</title>
+<title>WHMCS Diagnostic Check</title>
 <style>
 body, td {
     font-family: Tahoma;
@@ -46,7 +46,7 @@ color: inherit;
 
 </div>
 <div style="background-color:#f8f8f8;margin:0;padding:10px 30px;text-align:center;font-weight:bold;font-size:30px;">
-WHMCS Diognostic Check
+WHMCS Diagnostic Check
 </div>
 
 <div style="padding:25px;">
