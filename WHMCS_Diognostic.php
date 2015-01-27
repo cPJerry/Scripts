@@ -1,12 +1,8 @@
 <?php
 
-ini_set('display_errors',error_reporting(E_ALL & ~E_NOTICE));
-
-
 define('INSTALLED',file_exists('configuration.php'));
-
 if (INSTALLED ) {
-require_once('configuration.php');
+  require_once('configuration.php');
 }
 ?><html>
 <head>
@@ -76,6 +72,10 @@ $english['curlnossl'] = "Your loaded CURL does not support SSL";
 $english['nocurl'] = "The extension <b><u>CURL with SSL</u></b> is required";
 $english['pass'] = "Your System is able to run WHMCS.";
 $english['fail'] = "Your System is not able to run WHMCS.";
+if (INSTALLED) {
+  $english['pass'] = "Your System should be in working order.";
+  $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
+}
 $english['goodmem'] = "Your allowed memeory (_1) meets our requirments. (_2)";
 $english['badmem'] = "Your memory limit (currently _1MB) must be at least _2MB.";
 $english['badconfig'] = "The PHP setting _1 is invalid, please turn it _2";
