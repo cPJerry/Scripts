@@ -1,11 +1,17 @@
 <?php
-require_once("/home/servergu/public_html/configuration.php");
+      require_once("/home/servergu/public_html/configuration.php");
+
 $footer = <<<end
 </table>
 </div>
+
+
+
 <div style="padding:0 25px;font-size:11px;width:400px;">Copyright &copy; WHMCS Ltd. 2005-2014. All Rights Reserved. UK Registered Company #6265962. Vat No. GB 927 7746 76</div>
+
 </div>
 </div>
+
 </body>
 </html>
 end;
@@ -39,7 +45,7 @@ require_once('configuration.php');
 }
 ?><html>
 <head>
-<title>WHMCS Diognostic Check</title>
+<title>WHMCS Diagnostic Check</title>
 <style>
 body, td {
     font-family: Tahoma;
@@ -79,7 +85,7 @@ color: inherit;
 
 </div>
 <div style="background-color:#f8f8f8;margin:0;padding:10px 30px;text-align:center;font-weight:bold;font-size:30px;">
-WHMCS Diognostic Check
+WHMCS Diagnostic Check
 </div>
 
 <div style="padding:25px;">
