@@ -1,5 +1,5 @@
 <?php
-require_once( "/home/servergu/public_html/configuration.php" );
+require_once( "configuration.php" );
 $footer = <<<end
 </table>
 </div>
