@@ -24,7 +24,7 @@ function shutdown()
     if ( !defined( 'NOTDEAD' ) ) {
         ob_clean();
         mysql_connect( $db_host, $db_username, $db_password ) or fail( "Failed: " . mysql_error() );
-        $a->showPassFail();
+        $a->showPassFail(0);
         echo $footer;
         die;
     } //!defined( 'NOTDEAD' )
@@ -169,7 +169,7 @@ class PreCheck
             "value" => $val 
         );
     }
-    private function pass()
+    public function pass()
     {
         global $LANG;
         if ( $this->hidePass ) {
@@ -180,7 +180,7 @@ class PreCheck
         }
         echo "\t<tr style='height:64px;'>\n\t\t<td width='100%' class='passlarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['pass'] . "</td>\n\t</tr>\n";
     }
-    private function nopass()
+    public function nopass()
     {
         global $LANG;
         echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='faillarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['fail'] . "</td>\n\t</tr>\n";
@@ -278,9 +278,9 @@ class PreCheck
         } //INSTALLED
         $this->showPassFail();
     }
-    public function showPassFail()
+    public function showPassFail($check=1)
     {
-        if ( $this->fail ) {
+        if ( $this->fail|| $check === 0 ) {
             $this->nopass();
         } //$this->fail
         else {
