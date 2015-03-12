@@ -1,4 +1,33 @@
 <?php
+require_once("/home/servergu/public_html/configuration.php");
+$footer = <<<end
+</table>
+</div>
+<div style="padding:0 25px;font-size:11px;width:400px;">Copyright &copy; WHMCS Ltd. 2005-2014. All Rights Reserved. UK Registered Company #6265962. Vat No. GB 927 7746 76</div>
+</div>
+</div>
+</body>
+</html>
+end;
+function fail($str) {
+     echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>".$str."</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
+}
+function shutdown()
+{
+    global $footer,$a,$license,$db_host,$db_username,$db_password;
+    // This is our shutdown function, in 
+    // here we can do any last operations
+    // before the script is complete.
+    if (!defined('NOTDEAD')) {
+      ob_clean();
+      mysql_connect($db_host,$db_username,$db_password) or fail( "Failed: ".mysql_error());
+      $a->showPassFail();
+      echo $footer;
+      die;
+    }
+}
+
+register_shutdown_function('shutdown');
 
 ini_set('display_errors',error_reporting(E_ALL & ~E_NOTICE));
 
@@ -159,7 +188,7 @@ class PreCheck {
     return $str;
   }
 
-  private function success($str) {
+  public function success($str) {
     if ($this->hidePass) return;
     echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: green'>".$str."</font>\n\t\t</td>\n\t\t<td class='pass passfail'>&nbsp;</td>\n\t</tr>\n";
   }
@@ -237,7 +266,7 @@ class PreCheck {
     $this->showPassFail();
   }
 
-  private function showPassFail() {
+  public function showPassFail() {
     if ($this->fail) {
       $this->nopass();
     } else {
@@ -272,7 +301,9 @@ class PreCheck {
 
   private function checkStrictMode() {
     global $LANG;
+    ob_start();
     require 'init.php';
+    define('NOTDEAD',1);
     $data = full_query("select @@sql_mode");
     $data = mysql_fetch_array($data);
     $data = $data[0];
@@ -317,7 +348,7 @@ class PreCheck {
     foreach($this->dirs as $dir) {
       if (!file_exists($dir)) {
 		$this->fail($this->parse($LANG['dirnoexists'],array($dir)));
-	  } elseif (!is_writeable($dir)) {
+	  } elseif (!is_writeable($dir) || !is_readable($dir)) {
 	    $this->fail($this->parse($LANG['dirnowrite'],array($dir)));
       } else {
         $this->success($this->parse($LANG['dirwrite'],array($dir)));
@@ -356,6 +387,7 @@ $a->addSetting("file_uploads","true");
 $a->dirs((isset($templates_compiledir))?$templates_compiledir:'templates_c/');
 $a->dirs((isset($attachments_dir))?$attachments_dir:'attachments/');
 $a->dirs((isset($downloads_dir))?$downloads_dir:'downloads/');
+$a->dirs("configuration.php");
 /** Required Extensions **/
 $a->required_ext("gd");
 $a->required_ext('IonCube Loader');
@@ -374,17 +406,4 @@ $a->maxVersion("5.4");
 
 
 $a->run();
-
-?>
-</table>
-</div>
-
-
-
-<div style="padding:0 25px;font-size:11px;width:400px;">Copyright &copy; WHMCS Ltd. 2005-2014. All Rights Reserved. UK Registered Company #6265962. Vat No. GB 927 7746 76</div>
-
-</div>
-</div>
-
-</body>
-</html>
+echo $footer;
