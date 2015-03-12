@@ -1,6 +1,5 @@
 <?php
-      require_once("/home/servergu/public_html/configuration.php");
-
+require_once( "/home/servergu/public_html/configuration.php" );
 $footer = <<<end
 </table>
 </div>
@@ -15,34 +14,27 @@ $footer = <<<end
 </body>
 </html>
 end;
-function fail($str) {
-     echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>".$str."</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
+function fail( $str )
+{
+    echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
 }
 function shutdown()
 {
-    global $footer,$a,$license,$db_host,$db_username,$db_password;
-    // This is our shutdown function, in 
-    // here we can do any last operations
-    // before the script is complete.
-    if (!defined('NOTDEAD')) {
-      ob_clean();
-      mysql_connect($db_host,$db_username,$db_password) or fail( "Failed: ".mysql_error());
-      $a->showPassFail();
-      echo $footer;
-      die;
-    }
+    global $footer, $a, $license, $db_host, $db_username, $db_password;
+    if ( !defined( 'NOTDEAD' ) ) {
+        ob_clean();
+        mysql_connect( $db_host, $db_username, $db_password ) or fail( "Failed: " . mysql_error() );
+        $a->showPassFail();
+        echo $footer;
+        die;
+    } //!defined( 'NOTDEAD' )
 }
-
-register_shutdown_function('shutdown');
-
-ini_set('display_errors',error_reporting(E_ALL & ~E_NOTICE));
-
-
-define('INSTALLED',file_exists('configuration.php'));
-
-if (INSTALLED ) {
-require_once('configuration.php');
-}
+register_shutdown_function( 'shutdown' );
+ini_set( 'display_errors', error_reporting( E_ALL & ~E_NOTICE ) );
+define( 'INSTALLED', file_exists( 'configuration.php' ) );
+if ( INSTALLED ) {
+    require_once( 'configuration.php' );
+} //INSTALLED
 ?><html>
 <head>
 <title>WHMCS Diagnostic Check</title>
@@ -91,325 +83,351 @@ WHMCS Diagnostic Check
 <div style="padding:25px;">
 <table>
 <?php
-  /** These will allow for translation **/
-
-$language = "english";
-$english['goodversion'] = "Your PHP version, _1, is compatible.";
-$english['dirnoexists'] = "The following Required directory does not exist: _1.";
-$english['strictmodeon'] = "MySQL Strict mode is on. Please turn it off. (_1)";
-$english['strictmodeoff'] = "MySQL Strict Mode is OFF";
-
-$english['dirnowrite'] = "The following Required directory is not writeable: _1.";
-$english['dirwrite'] = "The following Required directory exists and is writable: _1.";
-$english['badversion'] = "Your PHP version, _1, is not compatible. We require at least _2, but no greater than _3.";
-$english['disabledfunc'] = "Function Check: <b><u><a href='http://php.net/_1' target='new'>_1</a></u></b> is disabled";
+$language                   = "english";
+$english['goodversion']     = "Your PHP version, _1, is compatible.";
+$english['dirnoexists']     = "The following Required directory does not exist: _1.";
+$english['strictmodeon']    = "MySQL Strict mode is on. Please turn it off. (_1)";
+$english['strictmodeoff']   = "MySQL Strict Mode is OFF";
+$english['dirnowrite']      = "The following Required directory is not writeable: _1.";
+$english['dirwrite']        = "The following Required directory exists and is writable: _1.";
+$english['badversion']      = "Your PHP version, _1, is not compatible. We require at least _2, but no greater than _3.";
+$english['disabledfunc']    = "Function Check: <b><u><a href='http://php.net/_1' target='new'>_1</a></u></b> is disabled";
 $english['nondisabledfunc'] = "Function Check: <b><u><a href='http://php.net/_1' target='new'>_1</a></u></b> is not disabled";
-$english['extloaded'] = "The extension <b><u>_1</u></b> is loaded.";
-$english['extnotloaded'] = "The extension <b><u>_1</u></b> is required.";
-$english['curlssl'] = "Your loaded CURL supports SSL.";
-$english['curlnossl'] = "Your loaded CURL does not support SSL";
-$english['nocurl'] = "The extension <b><u>CURL with SSL</u></b> is required";
-$english['pass'] = "Your System is able to run WHMCS.";
-$english['fail'] = "Your System is not able to run WHMCS.";
-if (INSTALLED) {
-  $english['pass'] = "Your System should be in working order.";
-  $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
-}
-$english['goodmem'] = "Your allowed memeory (_1) meets our requirments. (_2)";
-$english['badmem'] = "Your memory limit (currently _1MB) must be at least _2MB.";
-$english['badconfig'] = "The PHP setting _1 is invalid, please turn it _2";
+$english['extloaded']       = "The extension <b><u>_1</u></b> is loaded.";
+$english['extnotloaded']    = "The extension <b><u>_1</u></b> is required.";
+$english['curlssl']         = "Your loaded CURL supports SSL.";
+$english['curlnossl']       = "Your loaded CURL does not support SSL";
+$english['nocurl']          = "The extension <b><u>CURL with SSL</u></b> is required";
+$english['pass']            = "Your System is able to run WHMCS.";
+$english['fail']            = "Your System is not able to run WHMCS.";
+if ( INSTALLED ) {
+    $english['pass'] = "Your System should be in working order.";
+    $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
+} //INSTALLED
+$english['goodmem']    = "Your allowed memeory (_1) meets our requirments. (_2)";
+$english['badmem']     = "Your memory limit (currently _1MB) must be at least _2MB.";
+$english['badconfig']  = "The PHP setting _1 is invalid, please turn it _2";
 $english['goodconfig'] = "The PHP setting _1 has a valid value.";
-$LANG = $$language;
-
-
-
-class PreCheck {
-
-  public $disabled_functions;
-  private $needs;
-  private $hidePass;
-  private $minVersion;
-  private $maxVersion;
-  private $curVersion;
-  private $fail;
-  private $ext;
-  private $dirs;
-  private $settings;
-  public function __construct($hide=0) {
-    $this->hidePass = $hide;
-    $this->ext = array();
-    $this->dirs = array();
-    $this->fail = 0;
-    $this->disabled_functions = array();
-    self::setDisabled();
-    self::getVersion();
-  }
-
-  private function checkSetting() {
-    global $LANG;
-    foreach($this->settings as $setting) {
-      if ($this->boolcheck(ini_get($setting['name'])) != $setting['value']) {
-	$this->fail($this->parse($LANG['badconfig'],array($setting['name'],($setting['value'] == "false")?"Off":"On")));
-      } else {
-	$this->success($this->parse($LANG['goodconfig'],array($setting['name'])));
-      }
+$LANG                  = $$language;
+class PreCheck
+{
+    public $disabled_functions;
+    private $needs;
+    private $hidePass;
+    private $minVersion;
+    private $maxVersion;
+    private $curVersion;
+    private $fail;
+    private $ext;
+    private $dirs;
+    private $settings;
+    public function __construct( $hide = 0 )
+    {
+        $this->hidePass           = $hide;
+        $this->ext                = array();
+        $this->dirs               = array();
+        $this->fail               = 0;
+        $this->disabled_functions = array();
+        self::setDisabled();
+        self::getVersion();
     }
-  }
-
-  private function boolcheck($item) {
-    if ($item == '') return "false";
-    if ($item === 1) return "true";
-    if ($item === 0) return "false";
-    if ($item == true) return "true";
-    if ($item == false) return "false";
-    return $item;
-  }
-
-  public function addSetting($set,$val) {
-    $this->settings[] = array("name"=>$set,"value"=>$val);
-  }
-
-  private function pass() {
-    global $LANG;
-    if ($this->hidePass) {
-      echo "<tr><td width='95%'>&nbsp;</td><td >&nbsp;</td></tr>";
-    } else {
-      echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n";
+    private function checkSetting()
+    {
+        global $LANG;
+        foreach ( $this->settings as $setting ) {
+            if ( $this->boolcheck( ini_get( $setting['name'] ) ) != $setting['value'] ) {
+                $this->fail( $this->parse( $LANG['badconfig'], array(
+                     $setting['name'],
+                    ( $setting['value'] == "false" ) ? "Off" : "On" 
+                ) ) );
+            } //$this->boolcheck( ini_get( $setting['name'] ) ) != $setting['value']
+            else {
+                $this->success( $this->parse( $LANG['goodconfig'], array(
+                     $setting['name'] 
+                ) ) );
+            }
+        } //$this->settings as $setting
     }
-    echo "\t<tr style='height:64px;'>\n\t\t<td width='100%' class='passlarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>".$LANG['pass']."</td>\n\t</tr>\n";
-  }
-
-  private function nopass() {
-    global $LANG;
-    echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='faillarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>".$LANG['fail']."</td>\n\t</tr>\n";
-  }
-
-  private function parse($str,$args = null) {
-    if ($args == null) return $str;
-    $count = 1;
-    foreach($args as $a) {
-      $str = str_replace("_".$count,$a,$str);
-      $count++;
+    private function boolcheck( $item )
+    {
+        if ( $item == '' )
+            return "false";
+        if ( $item === 1 )
+            return "true";
+        if ( $item === 0 )
+            return "false";
+        if ( $item == true )
+            return "true";
+        if ( $item == false )
+            return "false";
+        return $item;
     }
-    return $str;
-  }
-
-  public function success($str) {
-    if ($this->hidePass) return;
-    echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: green'>".$str."</font>\n\t\t</td>\n\t\t<td class='pass passfail'>&nbsp;</td>\n\t</tr>\n";
-  }
-
-  private function fail($str) {
-    $this->fail = 1;
-    echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>".$str."</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
-  }
-  
-
-  private function getVersion() {
-    $this->curVersion = phpversion();
-  }
-
-  private function setDisabled() {
-    $disabled = ini_get("disable_functions");
-    $disabled = explode(",",$disabled);
-    foreach($disabled as $d) {
-      if ($d == '') continue;
-      $d = trim($d);
-      $this->disabled_functions[] = $d;
+    public function addSetting( $set, $val )
+    {
+        $this->settings[] = array(
+             "name" => $set,
+            "value" => $val 
+        );
     }
-  }
-
-  public function minVersion($ver) {
-    $this->minVersion = $ver;
-  }
-
-  public function maxVersion($ver) {
-    $this->maxVersion = $ver;
-  }
-
-  private function checkVersion() {
-    global $LANG;
-    $ver = explode(".",$this->curVersion);
-    $myVersion['minor'] = $ver[1];
-    $ver = explode(".",$this->minVersion);
-    $minVersion['minor'] = $ver[1];
-    $ver = explode(".",$this->maxVersion);
-    $maxVersion['minor'] = $ver[1];
-    // PHP 6 wont be out in the forseeable future. I am going to assume the major is 5
-    if ($myVersion['minor'] >= $minVersion['minor'] && $myVersion['minor'] <= $maxVersion['minor']) {
-      $this->success($this->parse($LANG['goodversion'],array($this->curVersion)));
-    } else {
-	$this->fail($this->parse($LANG['badversion'],array($this->curVersion,$this->minVersion,$this->maxVersion)));
+    private function pass()
+    {
+        global $LANG;
+        if ( $this->hidePass ) {
+            echo "<tr><td width='95%'>&nbsp;</td><td >&nbsp;</td></tr>";
+        } //$this->hidePass
+        else {
+            echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n";
+        }
+        echo "\t<tr style='height:64px;'>\n\t\t<td width='100%' class='passlarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['pass'] . "</td>\n\t</tr>\n";
     }
-    
-  }
-  
-  public function requires($func) {
-    $this->needs[] = $func;
-  }
-
-  public function dirs($func) {
-    $this->dirs[] = $func;
-  }
-
-  public function required_ext($ext) {
-    $this->ext[] = $ext;
-  }
-
-  public function run() {
-    $this->checkSetting();
-    $this->checkMem();
-    $this->checkDisabled();
-    $this->checkVersion();
-    $this->checkExt();
-    $this->checkCurlSSL();
-    
-    if (INSTALLED) { // These items must only be ran if the system is installed
-    $this->checkWrite();
-    $this->checkStrictMode();
+    private function nopass()
+    {
+        global $LANG;
+        echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='faillarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['fail'] . "</td>\n\t</tr>\n";
     }
-    
-    $this->showPassFail();
-  }
-
-  public function showPassFail() {
-    if ($this->fail) {
-      $this->nopass();
-    } else {
-      $this->pass();
+    private function parse( $str, $args = null )
+    {
+        if ( $args == null )
+            return $str;
+        $count = 1;
+        foreach ( $args as $a ) {
+            $str = str_replace( "_" . $count, $a, $str );
+            $count++;
+        } //$args as $a
+        return $str;
     }
-  }
-
-  private function checkCurlSSL() {
-    global $LANG;
-    if (extension_loaded("curl")) {
-      $version = curl_version();
-      $ssl_supported= ($version['features'] & CURL_VERSION_SSL);
-      if ($ssl_supported) {
-	$this->success($this->parse($LANG['curlssl']));
-      } else {
-        $this->fail($this->parse($LANG['curlnossl']));
-      }
-    } else {
-      $this->fail($this->parse($LANG['nocurl']));
+    public function success( $str )
+    {
+        if ( $this->hidePass )
+            return;
+        echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: green'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='pass passfail'>&nbsp;</td>\n\t</tr>\n";
     }
-  }
-  private function checkExt() {
-    global $LANG;
-    foreach ($this->ext as $ext) {
-      if (extension_loaded($ext)) {
-	$this->success($this->parse($LANG['extloaded'],array($ext)));
-      } else {
-	$this->fail($this->parse($LANG['extnotloaded'],array($ext)));
-      }
+    private function fail( $str )
+    {
+        $this->fail = 1;
+        echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
     }
-  }
-
-  private function checkStrictMode() {
-    global $LANG;
-    ob_start();
-    require 'init.php';
-    define('NOTDEAD',1);
-    $data = full_query("select @@sql_mode");
-    $data = mysql_fetch_array($data);
-    $data = $data[0];
-    if ($data != "") {
-      $this->fail($this->parse($LANG['strictmodeon'],array($data)));
-	} else {
-      $this->success($this->parse($LANG['strictmodeoff'],array()));
+    private function getVersion()
+    {
+        $this->curVersion = phpversion();
+    }
+    private function setDisabled()
+    {
+        $disabled = ini_get( "disable_functions" );
+        $disabled = explode( ",", $disabled );
+        foreach ( $disabled as $d ) {
+            if ( $d == '' )
+                continue;
+            $d                          = trim( $d );
+            $this->disabled_functions[] = $d;
+        } //$disabled as $d
+    }
+    public function minVersion( $ver )
+    {
+        $this->minVersion = $ver;
+    }
+    public function maxVersion( $ver )
+    {
+        $this->maxVersion = $ver;
+    }
+    private function checkVersion()
+    {
+        global $LANG;
+        $ver                 = explode( ".", $this->curVersion );
+        $myVersion['minor']  = $ver[1];
+        $ver                 = explode( ".", $this->minVersion );
+        $minVersion['minor'] = $ver[1];
+        $ver                 = explode( ".", $this->maxVersion );
+        $maxVersion['minor'] = $ver[1];
+        if ( $myVersion['minor'] >= $minVersion['minor'] && $myVersion['minor'] <= $maxVersion['minor'] ) {
+            $this->success( $this->parse( $LANG['goodversion'], array(
+                 $this->curVersion 
+            ) ) );
+        } //$myVersion['minor'] >= $minVersion['minor'] && $myVersion['minor'] <= $maxVersion['minor']
+        else {
+            $this->fail( $this->parse( $LANG['badversion'], array(
+                 $this->curVersion,
+                $this->minVersion,
+                $this->maxVersion 
+            ) ) );
+        }
+    }
+    public function requires( $func )
+    {
+        $this->needs[] = $func;
+    }
+    public function dirs( $func )
+    {
+        $this->dirs[] = $func;
+    }
+    public function required_ext( $ext )
+    {
+        $this->ext[] = $ext;
+    }
+    public function run()
+    {
+        $this->checkSetting();
+        $this->checkMem();
+        $this->checkDisabled();
+        $this->checkVersion();
+        $this->checkExt();
+        $this->checkCurlSSL();
+        if ( INSTALLED ) {
+            $this->checkWrite();
+            $this->checkStrictMode();
+        } //INSTALLED
+        $this->showPassFail();
+    }
+    public function showPassFail()
+    {
+        if ( $this->fail ) {
+            $this->nopass();
+        } //$this->fail
+        else {
+            $this->pass();
+        }
+    }
+    private function checkCurlSSL()
+    {
+        global $LANG;
+        if ( extension_loaded( "curl" ) ) {
+            $version       = curl_version();
+            $ssl_supported = ( $version['features'] & CURL_VERSION_SSL );
+            if ( $ssl_supported ) {
+                $this->success( $this->parse( $LANG['curlssl'] ) );
+            } //$ssl_supported
+            else {
+                $this->fail( $this->parse( $LANG['curlnossl'] ) );
+            }
+        } //extension_loaded( "curl" )
+        else {
+            $this->fail( $this->parse( $LANG['nocurl'] ) );
+        }
+    }
+    private function checkExt()
+    {
+        global $LANG;
+        foreach ( $this->ext as $ext ) {
+            if ( extension_loaded( $ext ) ) {
+                $this->success( $this->parse( $LANG['extloaded'], array(
+                     $ext 
+                ) ) );
+            } //extension_loaded( $ext )
+            else {
+                $this->fail( $this->parse( $LANG['extnotloaded'], array(
+                     $ext 
+                ) ) );
+            }
+        } //$this->ext as $ext
+    }
+    private function checkStrictMode()
+    {
+        global $LANG;
+        ob_start();
+        require 'init.php';
+        define( 'NOTDEAD', 1 );
+        $data = full_query( "select @@sql_mode" );
+        $data = mysql_fetch_array( $data );
+        $data = $data[0];
+        if ( $data != "" ) {
+            $this->fail( $this->parse( $LANG['strictmodeon'], array(
+                 $data 
+            ) ) );
+        } //$data != ""
+        else {
+            $this->success( $this->parse( $LANG['strictmodeoff'], array ()) );
+        }
+    }
+    private function checkMem()
+    {
+        global $LANG;
+        $mem = preg_replace( "/([0-9]*)(.*)/", "$1", ini_get( "memory_limit" ) );
+        if ( $mem >= $this->reqMem ) {
+            $this->success( $this->parse( $LANG['goodmem'], array(
+                 $mem,
+                $this->reqMem 
+            ) ) );
+        } //$mem >= $this->reqMem
+        else {
+            $this->fail( $this->parse( $LANG['badmem'], array(
+                 $mem,
+                $this->reqMem 
+            ) ) );
+        }
+    }
+    public function setMem( $mem )
+    {
+        $this->reqMem = $mem;
+    }
+    private function checkDisabled()
+    {
+        global $LANG;
+        foreach ( $this->needs as $func ) {
+            if ( in_array( $func, $this->disabled_functions ) ) {
+                $this->fail( $this->parse( $LANG['disabledfunc'], array(
+                     $func 
+                ) ) );
+            } //in_array( $func, $this->disabled_functions )
+            else {
+                $this->success( $this->parse( $LANG['nondisabledfunc'], array(
+                     $func 
+                ) ) );
+            }
+        } //$this->needs as $func
+    }
+    private function checkWrite()
+    {
+        global $LANG;
+        foreach ( $this->dirs as $dir ) {
+            if ( !file_exists( $dir ) ) {
+                $this->fail( $this->parse( $LANG['dirnoexists'], array(
+                     $dir 
+                ) ) );
+            } //!file_exists( $dir )
+            elseif ( !is_writeable( $dir ) || !is_readable( $dir ) ) {
+                $this->fail( $this->parse( $LANG['dirnowrite'], array(
+                     $dir 
+                ) ) );
+            } //!is_writeable( $dir ) || !is_readable( $dir )
+            else {
+                $this->success( $this->parse( $LANG['dirwrite'], array(
+                     $dir 
+                ) ) );
+            }
+        } //$this->dirs as $dir
+    }
 }
-
- 
-    }
-
-  private function checkMem() {
-    global $LANG;
-    $mem = preg_replace("/([0-9]*)(.*)/","$1",ini_get("memory_limit"));
-    if ($mem >= $this->reqMem) {
-      $this->success($this->parse($LANG['goodmem'],array($mem,$this->reqMem)));
-    } else {
-      $this->fail($this->parse($LANG['badmem'],array($mem,$this->reqMem)));
-    }
-  }
-  
-  
-
-  public function setMem($mem) {
-    $this->reqMem = $mem;
-  }
-
-  private function checkDisabled() {
-    global $LANG;
-    foreach($this->needs as $func) {
-      if (in_array($func,$this->disabled_functions)) {
-	$this->fail($this->parse($LANG['disabledfunc'],array($func)));
-      } else {
-        $this->success($this->parse($LANG['nondisabledfunc'],array($func)));
-      }
-    }
-  }
-  
-  private function checkWrite() {
-    global $LANG;
-    foreach($this->dirs as $dir) {
-      if (!file_exists($dir)) {
-		$this->fail($this->parse($LANG['dirnoexists'],array($dir)));
-	  } elseif (!is_writeable($dir) || !is_readable($dir)) {
-	    $this->fail($this->parse($LANG['dirnowrite'],array($dir)));
-      } else {
-        $this->success($this->parse($LANG['dirwrite'],array($dir)));
-      }
-    }
-  }
-}
-$a = new PreCheck(isset($_GET['hidepass']));
-
-$a->setMem(64);
-
-/** Required FUnction **/
-$a->requires("base64_decode");
-$a->requires("readfile");
-$a->requires("copy");
-$a->requires("preg_match_all");
-$a->requires("fsockopen");
-$a->requires("print_r");
-$a->requires("curl_exec");
-$a->requires("escapeshellcmd");
-$a->requires("unlink");
-$a->requires("file_get_contents");
-$a->requires("is_readable");
-$a->requires("fwrite");
-$a->requires("tempnam");
-/** End Required Functions **/
-
-$a->addSetting("open_basedir","false");
-$a->addSetting("magic_quotes_runtime","false");
-$a->addSetting("magic_quotes_sybase","false");
-$a->addSetting("session.auto_start",'false');
-$a->addSetting("safe_mode","false");
-$a->addSetting("register_globals","false");
-$a->addSetting("file_uploads","true");
-
-$a->dirs((isset($templates_compiledir))?$templates_compiledir:'templates_c/');
-$a->dirs((isset($attachments_dir))?$attachments_dir:'attachments/');
-$a->dirs((isset($downloads_dir))?$downloads_dir:'downloads/');
-$a->dirs("configuration.php");
-/** Required Extensions **/
-$a->required_ext("gd");
-$a->required_ext('IonCube Loader');
-$a->required_ext('IMAP');
-$a->required_ext('mysql');
-/** End Required Extentions **/
-
-/** PHP Version Check **/
-$a->minVersion("5.2");
-$a->maxVersion("5.4");
-/** End PHP Version Check **/
-//print_r(get_loaded_extensions());die;
-
-
-
-
-
+$a = new PreCheck( isset( $_GET['hidepass'] ) );
+$a->setMem( 64 );
+$a->requires( "base64_decode" );
+$a->requires( "readfile" );
+$a->requires( "copy" );
+$a->requires( "preg_match_all" );
+$a->requires( "fsockopen" );
+$a->requires( "print_r" );
+$a->requires( "curl_exec" );
+$a->requires( "escapeshellcmd" );
+$a->requires( "unlink" );
+$a->requires( "file_get_contents" );
+$a->requires( "is_readable" );
+$a->requires( "fwrite" );
+$a->requires( "tempnam" );
+$a->addSetting( "open_basedir", "false" );
+$a->addSetting( "magic_quotes_runtime", "false" );
+$a->addSetting( "magic_quotes_sybase", "false" );
+$a->addSetting( "session.auto_start", 'false' );
+$a->addSetting( "safe_mode", "false" );
+$a->addSetting( "register_globals", "false" );
+$a->addSetting( "file_uploads", "true" );
+$a->dirs( ( isset( $templates_compiledir ) ) ? $templates_compiledir : 'templates_c/' );
+$a->dirs( ( isset( $attachments_dir ) ) ? $attachments_dir : 'attachments/' );
+$a->dirs( ( isset( $downloads_dir ) ) ? $downloads_dir : 'downloads/' );
+$a->dirs( "configuration.php" );
+$a->required_ext( "gd" );
+$a->required_ext( 'IonCube Loader' );
+$a->required_ext( 'IMAP' );
+$a->required_ext( 'mysql' );
+$a->minVersion( "5.2" );
+$a->maxVersion( "5.4" );
 $a->run();
 echo $footer;
