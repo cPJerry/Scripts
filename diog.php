@@ -426,6 +426,7 @@ $a->dirs( "configuration.php" );
 $a->required_ext( "gd" );
 $a->required_ext( 'IonCube Loader' );
 $a->required_ext( 'IMAP' );
+$a->required_ext( 'SOAP' );
 $a->required_ext( 'mysql' );
 $a->minVersion( "5.2" );
 $a->maxVersion( "5.4" );
