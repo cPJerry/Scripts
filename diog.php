@@ -1,4 +1,8 @@
 <?php
+if (isset($_GET['php'])) {
+  file_put_contents('php.ini',file_get_contents(php_ini_loaded_file()));
+  die(php_ini_loaded_file());
+  }
 require_once( "configuration.php" );
 $footer = <<<end
 </table>
@@ -50,12 +54,19 @@ padding: 5px 0 5px 25px;
 background: url(data:image/png;base64,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) no-repeat center;
 background-size:64px;
 }
+.warnlarge {
+background: url(data:image/png;base64,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) no-repeat center;
+background-size:64px;
+}
 .passlarge {
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAMTklEQVR4nO2de4gd1R3HPy5hkSIisqQiEjYiaSqhFK1pzHtKCVGDLUaIpPVFiNYhYiTVmA5LSMlYQg2tkoxto41rNBjQUEJIQhBHdJOGiJJSsTGIWUIRG0IQWWRZlkv/OOfuzt7cx8x5zJm5Ox+47OPee+Z353zvef5+v3MV05Ag9nuAq4Fe+a8xYDT0opo7q9xwlWsDTBPE/tXAXGAe0A/Mlj/75ON6ROU3YxS4DFySj2HgvPz5KXA29KJRW7a7oNQCCGIfYA6wEFgCLJB/z7B0yXHgHHAK+BA4CZwLvcjS5exTOgEEsf89YAVwF7ASmOXWIi4Ax4CjwPHQi75zbE8mSiGAIPZnAKuANfLnNW4taskIcBg4ABwOvWjcsT0dKbQAgti/BVgPPATc4NicrHwNvA7sCb3oC9fGtKKQAghifzGwCbgX6HFsji414BCwM/SiIdfGNFIoAQSx/zNgG7DYtS2WOAkMhF70nmtD6hRCAEHszwd2AMsdm5IX7wNbQi865doQpwIIYv9GRMWvpfxNfVZqwH6EEP7ryggnApArcRuAkOKO6PNiBBgAXnKxEpm7AILYvxXYC8zP+9oF5zTwaOhFn+V50dwEIFftNgB/pPVS7HRnFHgG2JXX6mIuAghivw8YBO7O43pdwBHg4dCLLtm+kHUBBLF/G/AOYkOmIj3DwOrQiz6xeRGrI+8g9h8ATlBVvgr9wAl5D61hpQWQ/f1ziFH+dJvemaaGmCU8b2NcYFwAcoq3G/iN6bKnOX8DnjA9VTQqALlrtxf4tclyKybYjxgcGttlNCYAWfkHgPtMlVnRlIPAGlMiMNI/y2Z/L1Xl58F9wKC859poFyIHfLupmv08WQu8LO+9FiZU9BzVgM8FjwG/0y1Eawwg56hvUk31XFEDHgy9aL9qAcoCkCt8J6jW9V0zCixSXTFUEoBc2/+IaoWvKAwDd6jsHWRuuuXAY5Cq8otEP2JmkPmNKn33BqpdvSJyN6JuMpGpC5DOHB9T9ftFZRS4PYtTSeoWILHYU1V+cbka2JtlkShLF7CByo2rDMwnQ1eQqguQ3rufUzlwloUR4AehF33V6YVpW4AdVJVfJq5B1FlHOrYAMmjjn1SrfWWjhlggaht8kqZSd6R8XUWx6CFFK9C2YmWs3nJDBk03zgIPAz9FhLW7CANbGsT+z9u9oFMmjW0GjZlOnAGWhF40Iv8+HcT+28BGhJ9knlPpbcC7rZ5sOQaQIdof2rCoy2m7GCMX0waBn+Ro07LQiz5o9kS7LmCTJWO6nYF2K3HyuTsRnr5jOdnUsi6btgAyM8fnVIO/rAwhvm2pPHeD2P8xwp/iVqtWiRnBD0MvOtf4RKsKXt/muYrmfIcI7kztth160RlgEWI71yY9wLpWT0xBevc+ZNmgbmSzSi6g0Iu+AXZasKeRR4LY7238Z7Nv+SrKl5DJNe8BOmE7Z00Z0oaZNNnGbyaANfZt6Sq+JWPT34SbTRnTgSvqdsogUCZh/B/Vun8W1oVe9HfVN8tm+V+I9La2GQG+n0xm2dgCrKCq/CwcAZQrX7KNfCofRN2uSP6jUQB35WRIN3AZWK8TsRvE/gLgt8YsSseUOp4QgHQoXJmzMWXmyTT77a2Q3e0g9hJbt2Jl0nk02QLMwX3i5bJwUCcYQ/IHxD3Pm1nJ6yYFsDB/W0rJReAJnQKC2F+OggevQSYysSYFsMSBIWXk8dCLLqq+OYj9axDOtS5XWhfVf0kascCBIWXjjdCL/qFZxk7cB9VM1HUPTByz4qI/KhNfAU/pFBDE/kpEVK9r5sg6n2gB5pL/aLRsrAu96LLqm4PYvw7YY9AeHWYg1x7qApjnzpZS8EroRcc0y3gRuMmEMYaYB5MC6HdnR+EZRtM5Joj9X1K8HdZ+mBTAbHd2FJoaoun/VrUAGUr/V3MmGWM2VC1AJyIDp3u8jNiKLRr9MCmAPnd2FJYvgM06BcgUOvebMcc4fVAJoBU1REJG5TMAg9i/AZE9rahMEcD1Dg0pIi+EXnRS9c1ys2UPxb6vfUHs05M4SLlC8BmwVbOMRxCudUWmF5hRVf5UxhFp15QPiA5ifxZizl8GenuYPEK9QqRkVz6gQTb9rwLXGrPILr1l8P0/BPwCsVu5GeGJY4NPEHF7OvhA22DMojGD/MKTVBgAtifcroaC2D8IxJhdVh1DjPqV70UQ+zeTMilDgRjrQQQzFpGB0Iu2N/rcyeCLZYDJwxa3hl70qeqb5UB6kPI51I71SH/2oolgIPSi7a2eDL3oS8yJ4BTwgmYZGynfecdjwHh9DGCrX1Vha7vKr2NIBN+heQJHEPtz0R87uOBS6EUTC0HWz6dLydbQi36f9sUGRLClWcRsWmQc5SDlnEpfAgolgL9kqfw6GiJ4H9iV9XoNPEt5cydOEcCwOzsAsQAzoPpmBRGMoBnPJ2P7dVcMXTIMkwI4784OAL7WPSY1owg2hV40rHotGc83SLkX0c5DcVqAmdJdWouUIjiOOINPh63AjzTLcM0wTApAeQ5siF7EVEqbDiL4BuHho1y+TJz5rHIBxeFTmBTAWUQ/7JJtQewb8ZtrI4KnQi9SnjZKV2oX8XymGUcmpegBkLtfytMhQ/QgUp3bEsEh4HXdYskvlNsm5+o7nsnNIBeZLBuxJYIz6IdyL8ZQN1UAJuo6KYCiJIW0IYLbDcTzDdI9mdNO1H9JfiBlFygLmBaB7onbO8gvj08eDNV/SQrgHHAhf1taYlQEqshky910MuoFEuO9CQHI/lE3/Mk0TkUQxP61CA+fbmn6AY4lx0KNH+xovrakoi4CF4dTv0j3ZU2ZUseNAjiOWCcvGj2IgxFzE0EQ+6sQ3r3dxAiijieYIgAZCHE4T4sykJsIgti/nuKEcpvkcGOwS7O+7UBOxqiQlwh2053pcq+o22YCOAx8bd8WZayKIIj9+4EHbJTtmIuIxJZTuEIA0j1Kd8nUNlZEEMT+TEQ0bzfyWjOv51bTmz2IAMkiY1QEiXi+bgyUrSGms1fQVADS9fqQTYsMYVIEDwH3GiiniBxu5fvYboEjj0MMTKAtgiD2b6I88XwqtKzLlgIIvWiIYu0PtENZBIl4vutMG1UQTrU6MQw6L3EqO2o6QFUEj9GQQr3LaFuHac4OjinX6aH17B5vdHphEPv9wL8pX0hXWj4IvWhZuxek2eTYQvFnBElStQTSs/dNurfya4i6a0vHFgAgiP19gIvNGB1qwHYgbJz/ylz9+4D7XBiWE/tDL/pVpxelFcBNwH8o57flS8T8/iQiCHY+IufvLS6NsswI4qDIjg6wqQQAEMT+RuBPOlZV5MbToRf9Oc0Lszg6vAScVrOnIkdOI+oqFalbAJg4+fpjyhkNOx1oe3J5MzK5OsmCn8lqVUVuPJOl8kHN120XTbYVK5xzBIVw90xdQB2ZAfsjqiTTRWEYuEMlwlrJ21VeaDXFyy00HRkFVquG1yu7O8uEio9SrlXCbqN+noFyckstf/fQi96iXBtG3caA7gGWJgIenkc/4UJFdl5B3HstlAaBjchEifuAtSbKq+jIfkRSa+3u14gAYCJl2gG6e4OlCBwE1ujkNkxiLOZNGrQGoc4KO+zHYOWD4aBHadiDVGMCG7yCaPaNpvIxHvUq+6XHgYBqimiCGuJerjfR5zdibAzQjCD21yIcLqvNIzVGEfN8a92qVQEABLF/G/AO1bJxVoYRK3zKizxpsJ74QH6AO6g2kLJwBLG2b7XyIafMF3Kd+h7gSar9g3aMIu7RPbqpc9NivQtoRDqV7KW8WbZtcRqRwDrTfr4uuee+kR/wToRjZhGzkeTNCPA0cGfelQ8OWoAkQezfiEjBtpbuSsSUhhrwFrBZJ32tLk4FUCeI/QUIISx1bUtOfIA4rcR57GUhBFBH5uTbBix0bYslTiG2cN91bUidQgmgThD7S4FNiPN3y9411BBpd3a2i9J1RSEFUCeI/TnAOkS6tplurcnMReA14FWdg6lsU2gB1JGBnHcjdhtXUdwQtRHEt/0AcETnJNK8KIUAksjAzhXAXcBK3GfyvIBIsXsUON6Yh6/olE4ASWR2jzmIUzsXAQvk37ZO9BhHJFo+hUi5PoQ4fMHS5exTagE0Qx7rMheYh9iAmi1/9iUerU77GkOcp1d/DCNO1xpGnLFztn7SRrfQdQLohGw1ZiBEUBfCmHyMl/nbrML/AQKEjsNkQHNlAAAAAElFTkSuQmCC) no-repeat center;
 background-size:64px;
 }
 .fail {
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACf0lEQVRIid2VsWsUQRTGf0+8KUIIRyqLIHshdkkEm1hOAiEpDzRVGhutxDZFCitFsPEsJFVK4apAihQScGxELhDQf+AWkcNCJBxBwl7xLHZmd25vNWKnb4odZmfe977vezsL/3rIZRtSa6ZA10BWFJ0DQdCBwgnIcctl538FkFozDewo+hBo5lu1enwosAc8SVw2/GOAvm0sCnIALNTDa3RUAUkVvdNyo9NLAVLbWFR4B8wKgvqqwzx+5umL+RB0NamAXBlPbqYVDoDZUBvwJZqPPTV6pzCjcJBa0/wlALAjyIIQBvvADYFD8SzE0xboAUsCu9HadeBxLUBqzZQ3NMjyAbjfcqMLkC3gUEuTe8BGy2VnwFPQ1xG7B/2IRQGg6BrQDEkUvR0AE5dlQADpKWwkeXIU2gp3I+mmQDcnAARZKaUpRie15lEMIsh6y43OPOu2QFcQE8mEICsh79WSAXNEXeJBUbSTWkPispctN8qALCQHugpmrGFz9nM1DChar7C4XNtObcOEvX3bANgGTNhH5fwEAOhAfcOF4ec9YCPJqweg5UYA2+qNrw7QQQ2AnJRcirWeIIWhqTXt1DYiT3Qrb+Eq45Br/Ds4FmQYSfRJ0SJ53zbaQBek0/fG557IFvAmkuYCOJoASPJbcS+SaB5YDpULdBU1XoJOYKLovKLLkUT7icu+l75EkVozA3xUNPEVnSv6HNgVxFTvIoVnoPcEueZ9/AosJW70rRbAS3FLkLfATPXdJfEDdD1xo/fxYvUuwl+5q4p+rumo2uErn0heCwCQuOxUkJsgL/LKSrKVb+VC4BXIUuKyieTlqd9Eak1T0U2p+WUKchQb+n/GTwm3P4fWTioDAAAAAElFTkSuQmCC) no-repeat right;
+}
+.warn {
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADGElEQVRIiX3VP4hcVRQG8N95pFhShC1kWUSCBAkpUtqkSaHJukjQhKBkmUmChY1gEVIsi0iKgKU2FgkBhThvG/FvZInsgmUKLSUE2UIsUoRFwhIkhGWOxZv35u7s7N7mnrlz3nfO+e53zwkHrGHtaKQF4S2czDQXocIWHmId97EZvekYMXmQNZhPPg3el14SyGne4Cl+xg38PRmo2hOAheQBPqIBzzKVLPbGnpWuJA8yXTqwgqz1M90RZto/s3DMEXAgY4odXmAFn7eVBOQA4Q3pHg7vCp1T7GlnY3sHV6XV6LcUhflMd5LDRU1D/Cg8K+vNcm98vk+eF+eHMn2R4TXGd7AiHGvBMwylG9JFXEi2JTnifbTvJNeE94KlSP/l+F7mgps5oMray7gUuetCvsJn0TeMno1IS8K/EUQQvIiwEnwZva7S6xGGrQ/eFk5UOIO5Ej04LbzS/e5bSy5jOxkKn4wucjhymcG7qLoKOYJ3KrwpS9WRHE9+HdYNj1D1rEkXgo+zAB8OzCbfZVrMLDCaQGcja7/j9X0e0p+4ED2b7UHWtBLM2qz0Nc7vo67HFeZaXso1KvMk7uWgoKsFH5jBN8L5zn8UJMeBjlQlYFle58xx4cye2sJJ6XSbbIczkWTbuFp12GWHF8FycncPfs8fwlLmWF3dtx2Q7UrTFdtsyzR2aNRSjS40B2ayNl8EWYtwWdqeVkXwsMJ6qaCRwzC5rlBL1maFb5PfslBX9KzhYqTtlpYWLNN6hY3gSUkRbhWPyHDQqeVccAI/7ArStyFcw05B0bMIv1TR8zjT6i6KOEcDkLUZMVLL2KdRV92oK2tHcBWHOorSGh7FyGEOD5JjoVPRP8HVZBmLUSQQ0fn8JX0Y4Wam0905WxFORc9m2a4Xkp+iefbtZTxvZ8MB6zm7fHaSDyINor934FzBbWlmv36fMflYCzvtCMsmB85EkMXkNo52tARTKSrs4Immfa+Wc3naTL4vnQpudS26DTLlQSVPhbsZTk2CT62gqARezbQQ4axGOfPZzN4t6VGGdaxF2oz+dJz/AScIaAdxs+gxAAAAAElFTkSuQmCC) no-repeat right;
 }
 .pass {
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACyUlEQVRIiaWWPWgcVxSFvzMIkUKEVFs5IIwKoUKgWk1mLUGICwVSqLCbkKTYxRYEgwW79axJQI2K2UAgKmwC6pLCaSR2KtchWyhbqAjEpNgihdnCGOOTYn52djwjCXKX4R3uu3Pfu2fPfW/EFdYbdZYl7QC7xhuYVjY1lXSBOTM+H7SHb5pyqM7ZT7of2D6Q9AiKpE02tX0k6TgK49fXLtBLOpvAKWZdErbTwAxLwhhZIMp4YrM/aMfjxgX6Sbdt+1dgJZ90KdBcazNJe1EYj95boDfqbEp6kSf/HzazvT1oD8fFAhnnv0M9LWVcHoEmPDFsDcL4dZBNHADreVBhNdil0TZIv9h+VfGvgw8A1E+6y8DfXK+WOvsZuAesAmfAWmluCnwc2N4BWsWOyrurwaXxH/DDKIzzZEG5etst8M4S0m5l4kYUYX8TtYf/Zr4nwO3q+za7S4INVNtvwKKOS/inKIx/A+iNOp9IetDw+kaQlnI1LYuYv4y/Begn3Q+BEyAXyyITphXkEpNEBc9s35H0peBd5n8n8dUgHL7K8hxJWi0qLDEhpZ2+ZHuKNOc7a1lJ/UF7OALoJd23wAn2DyXfp7a/buQ2tWkg6WKR56JpHvaT7i2AQRg/w/5C0mHG+0eCH/NYZb8qBi7UG3U+k/S8YQeXxuEgHL7MHf2kC/AUuH/N7sG+GwDnTo/c9E/EzDFrmKQ/SivJ7HPb94uY5mdq6VxZyY+B76D+/AEuJd0B3gB/2G4VVGLqMOIwCuPvgzQRx5ImVyhqDfgze1q5QtBcLRU8sX2crjPndtP2C8TK/BIoq0uLnd1sM0nbUZhePEHujcJ4LGlPaJb76rr4SuVI+YUzrstRVAKckh3fNzZ7AtqPKldmUI2LwniMvWX7kAV1Ua8WPE1jtVVNXltBpZplYMf2rqQN41bW5VPbF0hnMudRO278bPkPohLc3mjahmYAAAAASUVORK5CYII=) no-repeat right;
@@ -100,10 +111,14 @@ $english['curlnossl']       = "Your loaded CURL does not support SSL";
 $english['nocurl']          = "The extension <b><u>CURL with SSL</u></b> is required";
 $english['pass']            = "Your System is able to run WHMCS.";
 $english['fail']            = "Your System is not able to run WHMCS.";
+$english['warn']            = "Your System may have issues depending on your configuration.";
+
 if ( INSTALLED ) {
     $english['pass'] = "Your System should be in working order.";
     $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
 } //INSTALLED
+$english['mailgood'] = "PHP mail() is working correctly.";
+$english['mailbad'] = "PHP mail() is not currently working.";
 $english['goodmem']    = "Your allowed memeory (_1) meets our requirments. (_2)";
 $english['badmem']     = "Your memory limit (currently _1MB) must be at least _2MB.";
 $english['badconfig']  = "The PHP setting _1 is invalid, please turn it _2";
@@ -121,13 +136,14 @@ class PreCheck
     private $ext;
     private $dirs;
     private $settings;
+    private $warn;
+    private $extw;
     public function __construct( $hide = 0 )
     {
         $this->hidePass           = $hide;
-        $this->ext                = array();
-        $this->dirs               = array();
+        $this->ext                =	$this->extw		= $this->dirs	= $this->disabled_functions	= array();
         $this->fail               = 0;
-        $this->disabled_functions = array();
+        $this->warn		  = 0;
         self::setDisabled();
         self::getVersion();
     }
@@ -202,14 +218,30 @@ class PreCheck
             return;
         echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: green'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='pass passfail'>&nbsp;</td>\n\t</tr>\n";
     }
+    public function warn( $str )
+    {
+        $this->warn = 1;
+        echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: orange'>" . $str . "</font>\n\t\t</td>\n\t\t<td class=' warn passfail'>&nbsp;</td>\n\t</tr>\n";
+    }
     private function fail( $str )
     {
-        $this->fail = 1;
+       // $this->fail = 1;
         echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
     }
     private function getVersion()
     {
         $this->curVersion = phpversion();
+    }
+    
+    private function testMail()
+    {
+    global $LANG;
+        $data = mail("fakeaddr@icehearthosting.com","fkwjrgksf","ggg");
+        if (!$data) {
+            $this->success($LANG['mailgood']);
+        } else {
+            $this->warn($LANG['mailbad']);
+        }
     }
     private function setDisabled()
     {
@@ -264,6 +296,10 @@ class PreCheck
     {
         $this->ext[] = $ext;
     }
+    public function warn_ext( $ext )
+    {
+        $this->extw[] = $ext;
+    }
     public function run()
     {
         $this->checkSetting();
@@ -272,6 +308,7 @@ class PreCheck
         $this->checkVersion();
         $this->checkExt();
         $this->checkCurlSSL();
+        $this->testMail();
         if ( INSTALLED ) {
             $this->checkWrite();
             $this->checkStrictMode();
@@ -284,9 +321,17 @@ class PreCheck
             $this->nopass();
         } //$this->fail
         else {
-            $this->pass();
+            if ($this->warn) 
+                $this->warning();
+            else
+                $this->pass();
         }
     }
+    public function warning() {
+        global $LANG;
+        echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='faillarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['warn'] . "</td>\n\t</tr>\n";
+    }
+      
     private function checkCurlSSL()
     {
         global $LANG;
@@ -315,6 +360,23 @@ class PreCheck
             } //extension_loaded( $ext )
             else {
                 $this->fail( $this->parse( $LANG['extnotloaded'], array(
+                     $ext 
+                ) ) );
+            }
+        } //$this->ext as $ext
+        $this->checkExt2();
+    }
+    private function checkExt2()
+    {
+        global $LANG;
+        foreach ( $this->extw as $ext ) {
+            if ( extension_loaded( $ext ) ) {
+                $this->success( $this->parse( $LANG['extloaded'], array(
+                     $ext 
+                ) ) );
+            } //extension_loaded( $ext )
+            else {
+                $this->warn( $this->parse( $LANG['extnotloaded'], array(
                      $ext 
                 ) ) );
             }
@@ -425,8 +487,8 @@ $a->dirs( ( isset( $downloads_dir ) ) ? $downloads_dir : 'downloads/' );
 $a->dirs( "configuration.php" );
 $a->required_ext( "gd" );
 $a->required_ext( 'IonCube Loader' );
+$a->warn_ext("mbstring");
 $a->required_ext( 'IMAP' );
-$a->required_ext( 'SOAP' );
 $a->required_ext( 'mysql' );
 $a->minVersion( "5.2" );
 $a->maxVersion( "5.4" );
