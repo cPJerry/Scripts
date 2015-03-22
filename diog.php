@@ -140,14 +140,13 @@ class PreCheck
     private $dirs;
     private $settings;
     private $warn;
+    private $extw;
     public function __construct( $hide = 0 )
     {
         $this->hidePass           = $hide;
-        $this->ext                = array();
-        $this->dirs               = array();
         $this->fail               = 0;
         $this->warn		  = 0;
-        $this->disabled_functions = array();
+        $this->ext                =	$this->extw		= $this->dirs	= $this->disabled_functions	= array();
         self::setDisabled();
         self::getVersion();
     }
@@ -364,6 +363,23 @@ class PreCheck
                 ) ) );
             }
         } //$this->ext as $ext
+                $this->checkExt2();
+    }
+    private function checkExt2()
+    {
+        global $LANG;
+        foreach ( $this->extw as $ext ) {
+            if ( extension_loaded( $ext ) ) {
+                $this->success( $this->parse( $LANG['extloaded'], array(
+                     $ext 
+                ) ) );
+            } //extension_loaded( $ext )
+            else {
+                $this->warn( $this->parse( $LANG['extnotloaded'], array(
+                     $ext 
+            ) ) );
+            }
+        } //$this->ext as $ext
     }
     private function checkStrictMode()
     {
@@ -473,6 +489,7 @@ $a->required_ext( "gd" );
 $a->required_ext( 'IonCube Loader' );
 $a->required_ext( 'IMAP' );
 $a->required_ext( 'mysql' );
+$a->warn_ext("mbstring");
 $a->minVersion( "5.2" );
 $a->maxVersion( "5.4" );
 $a->run();
