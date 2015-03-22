@@ -1,9 +1,6 @@
 <?php
-if (isset($_GET['php'])) {
-  file_put_contents('php.ini',file_get_contents(php_ini_loaded_file()));
-  die(php_ini_loaded_file());
-  }
-require_once( "configuration.php" );
+@include_once( "configuration.php" );
+@include_once( "../configuration.php" );
 $footer = <<<end
 </table>
 </div>
@@ -24,6 +21,7 @@ function fail( $str )
 }
 function shutdown()
 {
+
     global $footer, $a, $license, $db_host, $db_username, $db_password;
     if ( !defined( 'NOTDEAD' ) ) {
         ob_clean();
@@ -35,9 +33,13 @@ function shutdown()
 }
 register_shutdown_function( 'shutdown' );
 ini_set( 'display_errors', error_reporting( E_ALL & ~E_NOTICE ) );
-define( 'INSTALLED', file_exists( 'configuration.php' ) );
+define( 'INSTALLED', (file_exists( 'configuration.php' ) || file_exists('../configuration.php') ));
+if (file_exists('../configuration.php')) {
+define('INADMIN',1);
+}
 if ( INSTALLED ) {
-    require_once( 'configuration.php' );
+    @include_once( 'configuration.php' );
+    @include_once( '../configuration.php' );
 } //INSTALLED
 ?><html>
 <head>
@@ -46,6 +48,7 @@ if ( INSTALLED ) {
 body, td {
     font-family: Tahoma;
     font-size: 14px;
+    padding-right: 50px;
 }
 .passfail {
 padding: 5px 0 5px 25px;
@@ -79,7 +82,7 @@ color: inherit;
 <body bgcolor="#efefef">
 
 <div style="margin:0;width:100%;height:100%;background-color:#efefef;">
-<div style="background-color:#fff;margin:0 auto;padding:15px 0;width:600px;">
+<div style="background-color:#fff;margin:0 auto;padding:15px 0;display:table;">
 
 <div style="background-color:#00344c;padding:20px 30px;">
 
@@ -118,7 +121,7 @@ if ( INSTALLED ) {
     $english['fail'] = "Your system has failed at least 1 check. You may notice issues in your WHMCS Installation.";
 } //INSTALLED
 $english['mailgood'] = "PHP mail() is working correctly.";
-$english['mailbad'] = "PHP mail() is not currently working.";
+$english['mailbad'] = "PHP mail() may not be currently working.";
 $english['goodmem']    = "Your allowed memeory (_1) meets our requirments. (_2)";
 $english['badmem']     = "Your memory limit (currently _1MB) must be at least _2MB.";
 $english['badconfig']  = "The PHP setting _1 is invalid, please turn it _2";
@@ -137,13 +140,14 @@ class PreCheck
     private $dirs;
     private $settings;
     private $warn;
-    private $extw;
     public function __construct( $hide = 0 )
     {
         $this->hidePass           = $hide;
-        $this->ext                =	$this->extw		= $this->dirs	= $this->disabled_functions	= array();
+        $this->ext                = array();
+        $this->dirs               = array();
         $this->fail               = 0;
         $this->warn		  = 0;
+        $this->disabled_functions = array();
         self::setDisabled();
         self::getVersion();
     }
@@ -225,7 +229,7 @@ class PreCheck
     }
     private function fail( $str )
     {
-       // $this->fail = 1;
+        $this->fail = 1;
         echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
     }
     private function getVersion()
@@ -296,10 +300,6 @@ class PreCheck
     {
         $this->ext[] = $ext;
     }
-    public function warn_ext( $ext )
-    {
-        $this->extw[] = $ext;
-    }
     public function run()
     {
         $this->checkSetting();
@@ -317,11 +317,11 @@ class PreCheck
     }
     public function showPassFail($check=1)
     {
-        if ( $this->fail|| $check === 0 ) {
+        if ( $this->fail || $check === 0 ) {
             $this->nopass();
         } //$this->fail
         else {
-            if ($this->warn) 
+            if ($this->warn == 1) 
                 $this->warning();
             else
                 $this->pass();
@@ -329,7 +329,7 @@ class PreCheck
     }
     public function warning() {
         global $LANG;
-        echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='faillarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['warn'] . "</td>\n\t</tr>\n";
+        echo "\t<tr style='height: 25px;'>\n\t\t<td>&nbsp;</td>\n\t</tr>\n\t<tr style='height:64px;'>\n\t\t<td width='100%' class='warnlarge'>&nbsp;</td>\n\t</tr>\n\t<tr>\n\t\t<td width='100%' style='text-align:center'>" . $LANG['warn'] . "</td>\n\t</tr>\n";
     }
       
     private function checkCurlSSL()
@@ -364,29 +364,13 @@ class PreCheck
                 ) ) );
             }
         } //$this->ext as $ext
-        $this->checkExt2();
-    }
-    private function checkExt2()
-    {
-        global $LANG;
-        foreach ( $this->extw as $ext ) {
-            if ( extension_loaded( $ext ) ) {
-                $this->success( $this->parse( $LANG['extloaded'], array(
-                     $ext 
-                ) ) );
-            } //extension_loaded( $ext )
-            else {
-                $this->warn( $this->parse( $LANG['extnotloaded'], array(
-                     $ext 
-                ) ) );
-            }
-        } //$this->ext as $ext
     }
     private function checkStrictMode()
     {
         global $LANG;
         ob_start();
-        require 'init.php';
+        @include_once 'init.php';
+        @include_once '../init.php';
         define( 'NOTDEAD', 1 );
         $data = full_query( "select @@sql_mode" );
         $data = mysql_fetch_array( $data );
@@ -441,19 +425,20 @@ class PreCheck
     {
         global $LANG;
         foreach ( $this->dirs as $dir ) {
+            if (defined('INADMIN')) $dir = '../'.$dir;
             if ( !file_exists( $dir ) ) {
                 $this->fail( $this->parse( $LANG['dirnoexists'], array(
-                     $dir 
+                     __DIR__.'/'.$dir 
                 ) ) );
             } //!file_exists( $dir )
             elseif ( !is_writeable( $dir ) || !is_readable( $dir ) ) {
                 $this->fail( $this->parse( $LANG['dirnowrite'], array(
-                     $dir 
+                     __DIR__.'/'.$dir 
                 ) ) );
             } //!is_writeable( $dir ) || !is_readable( $dir )
             else {
                 $this->success( $this->parse( $LANG['dirwrite'], array(
-                     $dir 
+                     __DIR__.'/'.$dir 
                 ) ) );
             }
         } //$this->dirs as $dir
@@ -484,10 +469,8 @@ $a->addSetting( "file_uploads", "true" );
 $a->dirs( ( isset( $templates_compiledir ) ) ? $templates_compiledir : 'templates_c/' );
 $a->dirs( ( isset( $attachments_dir ) ) ? $attachments_dir : 'attachments/' );
 $a->dirs( ( isset( $downloads_dir ) ) ? $downloads_dir : 'downloads/' );
-$a->dirs( "configuration.php" );
 $a->required_ext( "gd" );
 $a->required_ext( 'IonCube Loader' );
-$a->warn_ext("mbstring");
 $a->required_ext( 'IMAP' );
 $a->required_ext( 'mysql' );
 $a->minVersion( "5.2" );
