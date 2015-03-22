@@ -365,6 +365,10 @@ class PreCheck
         } //$this->ext as $ext
                 $this->checkExt2();
     }
+    public function warn_ext( $ext )
+    {
+        $this->extw[] = $ext;
+    }
     private function checkExt2()
     {
         global $LANG;
