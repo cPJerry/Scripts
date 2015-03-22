@@ -478,6 +478,7 @@ $a->requires( "unlink" );
 $a->requires( "file_get_contents" );
 $a->requires( "is_readable" );
 $a->requires( "fwrite" );
+$a->required("sscanf");
 $a->requires( "tempnam" );
 $a->addSetting( "open_basedir", "false" );
 $a->addSetting( "magic_quotes_runtime", "false" );
