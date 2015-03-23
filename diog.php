@@ -1,4 +1,5 @@
 <?php
+if (isset($_GET['php'])) { define('NOTDEAD',1);phpinfo();die; }
 @include_once( "configuration.php" );
 @include_once( "../configuration.php" );
 $footer = <<<end
@@ -15,6 +16,8 @@ $footer = <<<end
 </body>
 </html>
 end;
+function error_hide($a,$b,$c) { return; }
+set_error_handler("error_hide");
 function fail( $str )
 {
     echo "\n\t<tr>\n\t\t<td width='95%'>\n\t\t\t<font style='color: red'>" . $str . "</font>\n\t\t</td>\n\t\t<td class='fail passfail'>&nbsp;</td>\n\t</tr>\n";
@@ -248,6 +251,7 @@ class PreCheck
     }
     private function setDisabled()
     {
+
         $disabled = ini_get( "disable_functions" );
         $disabled = explode( ",", $disabled );
         foreach ( $disabled as $d ) {
@@ -256,6 +260,15 @@ class PreCheck
             $d                          = trim( $d );
             $this->disabled_functions[] = $d;
         } //$disabled as $d
+        $disabled = ini_get( "suhosin.executor.func.blacklist" );
+        $disabled = explode( ",", $disabled );
+        foreach ( $disabled as $d ) {
+            if ( $d == '' )
+                continue;
+            $d                          = trim( $d );
+            $this->disabled_functions[] = $d;
+        } //$disabled as $d
+if (isset($_GET['disabledebug'])) {define('NOTDEAD',1);echo "<!-- ";print_r($this->disabled_functions);echo "\n\n".ini_get( "disable_functions" )."-->";}
     }
     public function minVersion( $ver )
     {
