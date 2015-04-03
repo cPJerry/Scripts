@@ -554,7 +554,7 @@ $a->required_ext( 'IMAP' );
 $a->required_ext( 'mysql' );
 $a->required_ext("mbstring");
 $a->minVersion( "5.2" );
-$a->maxVersion( "5.3" );
+$a->maxVersion( "5.4" );
 $a->run();
 echo $footer;
 }
